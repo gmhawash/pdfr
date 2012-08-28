@@ -1,0 +1,209 @@
+
+  ` ----------------------------------------------------
+  ` User name (OS): dlittle
+  ` Date and time: 10/02/06, 15:45:38
+  ` ----------------------------------------------------
+  ` Method: Forms_Build_1298
+  ` Description
+  ` Build a 1298 form FDF
+  `
+  ` Parameters
+  ` ----------------------------------------------------
+  `Examples
+  `   Check-Box
+  `      $FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"type";Lowercase(aRequestType{aRequestType}))  `initial, amend, or renew
+  `      $FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"sm";"Yes")  
+  `      $FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"sf";"Off")  `#5 Female
+  `   Text Area
+  `      $FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"name";[Person]LastName+", "+[Person]FirstName+" "+[Person]MiddleName)  `#1
+  `   Array Start
+  `      $FDF:=$FDF+PDF_BuildFDF ("ArrayStart";"Txt";"country")  `#7 & #8 - Passport Country
+  `   Array End
+  `     $FDF:=$FDF+PDF_BuildFDF ("ArrayEnd")
+  ` ----------------------------------------------------
+
+C_TEXT($FDF)  `the text as it is being built
+C_TEXT(vd_begindate;vd_enddate)  `Begin and End dates from dialog
+C_TEXT(vt_ContactPerson;vt_CostAcct;vt_OrgCode;vt_ProgramCode;vt_WorkPkg)  `Other fields from dialog
+C_TEXT($path)  `path to the document
+C_TEXT($SSN)  `Because in one place, the SSN doesn't contain "-"
+
+$SSN:=Replace string([Person]SocialSecurity;"-";"")
+
+$FDF:=PDF_BuildFDF ("Begin")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"ID no";[Person]SocialSecurity)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"Text3";"This page is to be filled out by Foreign National Visitors only.")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"agree date from";vd_EndDate)  `From and To are reversed in name in the PDF Form
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"agree date to";vd_BeginDate)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"business address";[Person]Address1+", "+[Person]Address2+", "+[Person]City+", "+[Person]StateProvince+", "+[Person]Country+", "+[Person]ZipCode)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"business phone";[Person]WorkPhone+" ext. "+[Person]WorkPhoneExt)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"citizenship";[Person]Citizenship)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"contact";vt_ContactPerson)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"cost account";vt_CostAcct)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"cost center";vt_OrgCode)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"date";String(Current date(*);Short )
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"div ldr name";"Kurt Schoenberg")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"dob";String([Person]DateOfBirth))
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"e-mail";[Person]EmailAddress)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-1";[Person]LastName+", "+[Person]FirstName+" "+[Person]MiddleName)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-8";Substring($SSN;1;1))
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-9";Substring($SSN;2;1))
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-10";Substring($SSN;3;1))
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-11";Substring($SSN;4;1))
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-12";Substring($SSN;5;1))
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-13";Substring($SSN;6;1))
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-14";Substring($SSN;7;1))
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-15";Substring($SSN;8;1))
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-16";Substring($SSN;9;1))
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-4";[Person]Address1+", "+[Person]Address2)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-5";[Person]City+", "+[Person]StateProvince+" "+[Person]ZipCode)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"f1-4";[Person]Address1+", "+[Person]Address2)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"first name";[Person]FirstName)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"from";vd_BeginDate)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"last name";[Person]LastName)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"mail stop";"H830")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"maximum";"$750 \\(Stone Funding\\)")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"menu warning";"NOTE: Use these buttons to print or save the form. DO NOT use the browser tool ba"+"r.")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"name";[Person]LastName+", "+[Person]FirstName+" "+[Person]MiddleName)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"page no 3";"Page 3 of 4")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"page no 4";"Page 4 of 4")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"phone contact";"")  `PA Phone
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"program code";vt_ProgramCode)
+
+Case of 
+	: (vt_ContactPerson="User1@")
+		$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"site";"TA-53 Bldg 1 Rm 111")
+	: (vt_ContactPerson="User2@")
+		$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"site";"TA-53 Bldg 1 Rm 222")
+	: (vt_ContactPerson="User3@")
+		$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"site";"TA-53 Bldg 1 Rm 333")
+End case 
+
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"project descript";"User will be coming for beam on Proposal No. "+[Proposal]ProposalNumber+" and has been granted Stone Funding to cover a portion of their expenses.")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"sponsor";"LANSCE-UTO")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"ssn";[Person]SocialSecurity)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"title";"Student")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"to";vd_EndDate)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"travel from";"")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"travel to 1";"Los Alamos")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"travel to 2";"")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"visa";[Person]VisaType)
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"Txt";"work pkg";vt_WorkPkg)
+
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"c1-1";"Yes")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"c1-2";"Off")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"c1-3";"Off")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"c1-4";"Off")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"c1-5";"Off")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"car";"Yes")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"co";"sa")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"fee";"no")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"intermittent";"Off")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"lab prop";"no")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"lp";"no")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"pay";"travel")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"subsistence";"Yes")
+$FDF:=$FDF+PDF_BuildFDF ("AddField";"CB";"travel";"Yes")
+
+$FDF:=$FDF+PDF_BuildFDF ("End";$path)
+$tmDoc:=Create document("")
+If (ok=1)
+	SEND PACKET($tmDoc;$FDF)
+	CLOSE DOCUMENT($tmDoc)
+End if 
+
+  `eom: Forms_Build_1298
+
+
+
+
+
+  ` ----------------------------------------------------
+  ` User name (OS): dlittle
+  ` Date and time: 09/26/06, 08:45:39
+  ` ----------------------------------------------------
+  ` Method: PDF_BuildFDF
+  ` Description
+  ` Build an FDF part to be opened with a PDF.  I found the info to build this at the following website
+  `      http://www.tgreer.com/fdfServe.html
+  `      http://www.tgreer.com/pdfSubmit.html
+  `
+  ` Parameters
+  `   $1 - T - $tAction
+  `      Begin
+  `      AddField
+  `      ArrayStart
+  `      ArrayEnd
+  `      End
+
+  `   Begin: None
+  `   AddField: 
+  `      $2 - $tFieldType - T - Currently, only check box or text
+  `      $3 - $tFieldName - T - Name of field expected by PDF
+  `      $4 - $tFieldValue - T - The value of the field
+  `   End:
+  `      $2 - $tPDFPath - text - web or file path to PDF used by FDF.  
+  `         If blank, the FDF will ask the user what PDF to use.
+
+  ` ----------------------------------------------------
+
+  `Input Values
+C_TEXT($1;$2;$3;$4)
+C_TEXT($tAction)
+C_TEXT($tFieldType;$tFieldName;$tFieldValue)
+C_TEXT($tArrayNme)
+C_TEXT($tPDFPath)
+
+  `Output Value
+C_TEXT($0)
+C_TEXT($tResult)
+
+$tAction:=$1
+
+Case of 
+	: ($tAction="Begin")
+		  `The beginning of an FDF appears to always be the same.
+		$tResult:="%FDF-1.2\r%‚„œ\"\r1 0 obj<</FDF<</Fields["
+		
+	: ($tAction="ArrayStart")
+		  `$tArrayType:=$2  `Need to check if arrays can be other than text
+		$tArrayName:=$3
+		$tResult:="<</T("+$tArrayName+")/Kids["
+		
+	: ($tAction="ArrayEnd")
+		$tResult:="]>>"
+		
+	: ($tAction="AddField")
+		  `So far, only briefly tested with text and check boxes.
+		$tFieldType:=$2
+		$tFieldName:=$3
+		$tFieldValue:=$4
+		$tResult:="<</T("+$tFieldName+")/V"
+		Case of 
+			: ($tFieldType="Txt")
+				$tResult:=$tResult+"("+$tFieldValue+")>>"
+			: ($tFieldType="CB")
+				$tResult:=$tResult+"/"+$tFieldValue+">>"
+		End case 
+		
+	: ($tAction="End")
+		  `the ID appears to always be ignored but all are 32 char.  I've made it repeated 4D
+		  `so I can identify any I create.
+		
+		  ` the Path can either be the physical path to a file or to a web based PDF
+		If (Count parameters=2)
+			$tPDFPath:=$2
+		Else 
+			$tPDFPath:=""
+		End if 
+		$tResult:="]/ID[<4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D>"
+		$tResult:=$tResult+"<4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D>]"
+		$tResult:=$tResult+"/F("+$tPDFPath+")>>>>\r"
+		$tResult:=$tResult+"endobj\rtrailer\r<</Root 1 0 R>>\r%%EOF\r"
+End case 
+
+$0:=$tResult
+
+  `eom: PDF_BuildFDF
+
+
